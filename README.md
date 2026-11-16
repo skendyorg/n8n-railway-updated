@@ -4,6 +4,7 @@ This independent repository belongs to skendyorg. Railway deploys n8n and its pr
 
 ## Addresses
 
+- App overview: `https://internal.t-apps.nl/` — redirects to the Cloudflare App Launcher at `https://tappshq.cloudflareaccess.com/`.
 - Editor: `https://n8n.internal.t-apps.nl/` — accessible through the company Cloudflare One Client (WARP).
 - Webhooks: `https://hooks.t-apps.nl/` — public webhook endpoints only. The root URL intentionally returns 404.
 
@@ -15,6 +16,8 @@ This independent repository belongs to skendyorg. Railway deploys n8n and its pr
 4. Connect WARP and open the editor address. Complete a separate n8n sign-in or accept your n8n invitation.
 
 The initial allowlist is `mozes@t-apps.nl`, `tygo@t-apps.nl`, `orbay@t-apps.nl`, and `otto@t-apps.nl`. Cloudflare Access and WARP enrollment both use this explicit list. To add someone later, update both allowlists and the matching WARP device profile, then invite them inside n8n. Do not add users to unrelated existing Access policies.
+
+The App Launcher uses the same four-user allowlist and contains an **n8n (WARP required)** bookmark. Its separate reusable bookmark policy controls tile visibility; the private n8n Access policy continues to control actual access. When adding a team member, update the launcher policy and the bookmark's reusable policy too. The overview sign-in page is publicly reachable, while opening n8n still requires WARP. The `internal.t-apps.nl` DNS record is proxied and its exact-host redirect runs at Cloudflare's edge; it does not publish the private n8n hostname or route requests to Railway.
 
 The dedicated WARP profile routes the Cloudflare private-hostname ranges; it does not route all ordinary web browsing through the company network. Gateway TLS decryption is disabled. Email-code sign-in is not an MFA policy; n8n users should enable n8n's own MFA where available.
 
