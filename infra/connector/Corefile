@@ -1,0 +1,7 @@
+.:1053 {
+    bind 127.0.0.1
+    errors
+    cache 30
+    rewrite stop name exact n8n.internal.t-apps.nl n8n-gateway.railway.internal answer auto
+    forward . /etc/resolv.conf
+}
