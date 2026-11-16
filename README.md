@@ -18,6 +18,8 @@ The initial allowlist is `mozes@t-apps.nl`, `tygo@t-apps.nl`, `orbay@t-apps.nl`,
 
 The dedicated WARP profile routes the Cloudflare private-hostname ranges; it does not route all ordinary web browsing through the company network. Gateway TLS decryption is disabled. Email-code sign-in is not an MFA policy; n8n users should enable n8n's own MFA where available.
 
+The gateway serves HTTP/1.1 and HTTP/2 over TCP. HTTP/3 is disabled so the private editor uses the protocol covered by its Cloudflare Access application.
+
 ## Railway services
 
 - **n8n** uses the root Dockerfile and PostgreSQL. Preserve its encryption key and persistent volume.

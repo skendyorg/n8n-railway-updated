@@ -2,6 +2,10 @@
 	admin off
 	email mozes@t-apps.nl
 	auto_https disable_redirects
+	# The private Access application protects TCP. Keep HTTPS on TCP only.
+	servers {
+		protocols h1 h2
+	}
 }
 
 n8n.internal.t-apps.nl {
