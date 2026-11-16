@@ -31,6 +31,8 @@ No secrets belong in this repository. Do not create public Railway service domai
 
 The tunnel and gateway allow only `/webhook/*`, `/webhook-test/*`, and `/webhook-waiting/*` on the public hostname. The editor, `/rest`, `/api`, forms, and other paths are not published. The gateway's `/healthz` is an internal readiness endpoint only.
 
+A Cloudflare custom rule skips only Browser Integrity Check on these three webhook path prefixes so normal script clients can call them. Other Cloudflare security rules continue to apply.
+
 Path filtering is not webhook authentication. Configure authentication for every workflow before activating it:
 
 - For GitHub, configure and verify the webhook secret / `X-Hub-Signature-256` signature using the supported trigger or a signature-verification step before side effects. Do not assume every generic Webhook node verifies signatures.
@@ -44,3 +46,11 @@ Do not put an interactive Cloudflare login in front of the public webhook addres
 Use `N8N_EDITOR_BASE_URL=https://n8n.internal.t-apps.nl/` and `N8N_WEBHOOK_URL=https://hooks.t-apps.nl/`. Caddy sends one authoritative forwarded-address header to n8n, with `N8N_PROXY_HOPS=1`.
 
 Check the gateway's Railway readiness check, certificate renewal logs, tunnel health, and a real signed webhook after changes. Confirm that the public hostname's `/` and `/rest/settings` return 404 and that the editor is inaccessible without WARP. Back up PostgreSQL, the n8n volume, and the encryption key independently; verify the backup schedule in Railway before relying on it.
+
+## Setup verification — 16 November 2026
+
+- Railway reports successful n8n, gateway, and connector deployments. The gateway obtained its HTTPS certificate and keeps it in the persistent volume.
+- The old public Railway address was removed; both its root and `/rest/settings` return Railway “Application not found” responses.
+- The public webhook hostname blocks the editor, REST API, and public API. Nonexistent production and test webhook paths reach n8n, including requests from default Python clients. Encoded parent-directory attempts do not expose editor routes.
+- The private editor hostname does not resolve outside WARP. Its Access policy, enrollment policy, and device profile are limited to the four approved emails.
+- Still to confirm with a team member: WARP enrollment, private editor sign-in, and a real signed/authenticated webhook workflow. These user/workflow checks were not completed during infrastructure setup.
