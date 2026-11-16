@@ -22,7 +22,7 @@ The dedicated WARP profile routes the Cloudflare private-hostname ranges; it doe
 
 - **n8n** uses the root Dockerfile and PostgreSQL. Preserve its encryption key and persistent volume.
 - **Postgres** and **n8n-runners** stay on Railway's private network.
-- **Cloudflared** uses `infra/connector/Dockerfile`. CoreDNS on loopback rewrites the private editor hostname to `n8n-gateway.railway.internal`, using Railway DNS for the current private address. The existing `railway-n8n-internal` tunnel token remains a Railway secret.
+- **Cloudflared** uses `infra/connector/Dockerfile`. CoreDNS on loopback rewrites the private editor hostname to `n8n-gateway-e6ab.railway.internal`, using Railway DNS for the current private address. The existing `railway-n8n-internal` tunnel token remains a Railway secret.
 - **n8n-gateway** uses `infra/gateway/Dockerfile`. Caddy serves private HTTPS on 443 and a webhook-only HTTP listener on 8080. Its `/data` volume stores certificates. `CF_DNS_API_TOKEN` is restricted to DNS edit and zone read for `t-apps.nl` and supports automatic certificate renewal.
 
 No secrets belong in this repository. Do not create public Railway service domains or TCP proxies for the editor, gateway, database, or runners.
