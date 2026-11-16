@@ -19,6 +19,11 @@ n8n.internal.t-apps.nl {
 # This listener is reachable only inside Railway and from our tunnel.
 # Provider authentication/signature checks belong to each n8n workflow.
 http://:8080 {
+	# Railway's internal readiness check. Cloudflare ingress does not publish it.
+	handle /healthz {
+		rewrite * /healthz/readiness
+		reverse_proxy n8n.railway.internal:5678
+	}
 	@webhook {
 		host hooks.t-apps.nl
 		path /webhook/* /webhook-test/* /webhook-waiting/*
