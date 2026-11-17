@@ -7,6 +7,7 @@ This independent repository belongs to skendyorg. Railway deploys n8n and the sh
 - App overview: `https://tappshq.cloudflareaccess.com/`. The former `internal.t-apps.nl` homepage redirect is disabled.
 - Editor: `https://n8n.internal.t-apps.nl/` — accessible through the company Cloudflare One Client (WARP).
 - Monitoring: `https://uptime.internal.t-apps.nl/` — accessible through WARP and the same approved team policy.
+- Monitoring heartbeats: `https://uptime-hooks.t-apps.nl/api/push/<monitor-token>` — public incoming pings only; all other paths return 404.
 - Webhooks: `https://hooks.t-apps.nl/` — public webhook endpoints only. The root URL intentionally returns 404.
 
 ## Team access

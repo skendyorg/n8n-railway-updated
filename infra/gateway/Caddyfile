@@ -34,7 +34,7 @@ uptime.internal.t-apps.nl {
 }
 
 # This listener is reachable only inside Railway and from our tunnel.
-# Provider authentication/signature checks belong to each n8n workflow.
+# n8n workflows validate provider authentication; Kuma validates each push token.
 http://:8080 {
 	# Railway's internal readiness check. Cloudflare ingress does not publish it.
 	handle /healthz {
@@ -49,6 +49,18 @@ http://:8080 {
 		reverse_proxy n8n.railway.internal:5678 {
 			header_up X-Forwarded-For {http.request.header.CF-Connecting-IP}
 			header_up X-Forwarded-Host hooks.t-apps.nl
+			header_up X-Forwarded-Proto https
+		}
+	}
+	@kumaPush {
+		host uptime-hooks.t-apps.nl
+		path_regexp kumaPush ^/api/push/[A-Za-z0-9_-]+$
+	}
+	handle @kumaPush {
+		header Cache-Control "no-store"
+		reverse_proxy uptime-kuma.railway.internal:3001 {
+			header_up X-Forwarded-For {http.request.header.CF-Connecting-IP}
+			header_up X-Forwarded-Host uptime-hooks.t-apps.nl
 			header_up X-Forwarded-Proto https
 		}
 	}
