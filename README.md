@@ -1,11 +1,12 @@
-# Internal n8n
+# Internal tools
 
-This independent repository belongs to skendyorg. Railway deploys n8n and its private-access infrastructure from it.
+This independent repository belongs to skendyorg. Railway deploys n8n and the shared private-access infrastructure from it. Uptime Kuma runs in the same project from its official Docker image.
 
 ## Addresses
 
-- App overview: `https://internal.t-apps.nl/` — redirects to the Cloudflare App Launcher at `https://tappshq.cloudflareaccess.com/`.
+- App overview: `https://tappshq.cloudflareaccess.com/`. The former `internal.t-apps.nl` homepage redirect is disabled.
 - Editor: `https://n8n.internal.t-apps.nl/` — accessible through the company Cloudflare One Client (WARP).
+- Monitoring: `https://uptime.internal.t-apps.nl/` — accessible through WARP and the same approved team policy.
 - Webhooks: `https://hooks.t-apps.nl/` — public webhook endpoints only. The root URL intentionally returns 404.
 
 ## Team access
@@ -17,7 +18,7 @@ This independent repository belongs to skendyorg. Railway deploys n8n and its pr
 
 The initial allowlist is `mozes@t-apps.nl`, `tygo@t-apps.nl`, `orbay@t-apps.nl`, and `otto@t-apps.nl`. Cloudflare Access and WARP enrollment both use this explicit list. To add someone later, update both allowlists and the matching WARP device profile, then invite them inside n8n. Do not add users to unrelated existing Access policies.
 
-The App Launcher uses the same four-user allowlist and contains an **n8n (WARP required)** bookmark. Its separate reusable bookmark policy controls tile visibility; the private n8n Access policy continues to control actual access. When adding a team member, update the launcher policy and the bookmark's reusable policy too. The overview sign-in page is publicly reachable, while opening n8n still requires WARP. The `internal.t-apps.nl` DNS record is proxied and its exact-host redirect runs at Cloudflare's edge; it does not publish the private n8n hostname or route requests to Railway.
+The App Launcher uses the same four-user allowlist. The old **n8n (WARP required)** bookmark was moved to an unused hostname and hidden on 17 November 2026 after removing its duplicate destination restored n8n login. Do not create a separate bookmark pointing at the hostname of a private Access application. Use the protected application's own launcher visibility setting. When adding a team member, update each relevant private application policy and the launcher policy as well as WARP enrollment. The overview sign-in page is publicly reachable, while opening either private application still requires WARP. Both private application sessions last one week.
 
 The dedicated WARP profile routes the Cloudflare private-hostname ranges; it does not route all ordinary web browsing through the company network. Gateway TLS decryption is disabled. Email-code sign-in is not an MFA policy; n8n users should enable n8n's own MFA where available.
 
@@ -27,10 +28,11 @@ The gateway serves HTTP/1.1 and HTTP/2 over TCP. HTTP/3 is disabled so the priva
 
 - **n8n** uses the root Dockerfile and PostgreSQL. Preserve its encryption key and persistent volume.
 - **Postgres** and **n8n-runners** stay on Railway's private network.
-- **Cloudflared** uses `infra/connector/Dockerfile`. CoreDNS on loopback rewrites the private editor hostname to `n8n-gateway-e6ab.railway.internal`, using Railway DNS for the current private address. The existing `railway-n8n-internal` tunnel token remains a Railway secret.
+- **uptime-kuma** uses the official pinned image and a persistent `/app/data` volume. See [Kuma operations](infra/uptime-kuma/README.md).
+- **Cloudflared** uses `infra/connector/Dockerfile`. CoreDNS on loopback rewrites both private application hostnames to `n8n-gateway-e6ab.railway.internal`, using Railway DNS for the current private address. The existing `railway-n8n-internal` tunnel token remains a Railway secret.
 - **n8n-gateway** uses `infra/gateway/Dockerfile`. Caddy serves private HTTPS on 443 and a webhook-only HTTP listener on 8080. Its `/data` volume stores certificates. `CF_DNS_API_TOKEN` is restricted to DNS edit and zone read for `t-apps.nl` and supports automatic certificate renewal.
 
-No secrets belong in this repository. Do not create public Railway service domains or TCP proxies for the editor, gateway, database, or runners.
+No secrets belong in this repository. Do not create public Railway service domains or TCP proxies for the editor, monitoring dashboard, gateway, database, or runners.
 
 ## Webhook authentication
 

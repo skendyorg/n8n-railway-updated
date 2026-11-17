@@ -3,5 +3,6 @@
     errors
     cache 30
     rewrite stop name exact n8n.internal.t-apps.nl n8n-gateway-e6ab.railway.internal answer auto
+    rewrite stop name exact uptime.internal.t-apps.nl n8n-gateway-e6ab.railway.internal answer auto
     forward . /etc/resolv.conf
 }
